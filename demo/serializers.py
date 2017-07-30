@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from demo.models import Book,Publisher
+from demo.models import Book,Publisher, Author
 
 
 class PublisherSerializer(serializers.Serializer):
@@ -24,3 +24,11 @@ class PublisherSerializer(serializers.Serializer):
         instance.website = validated_data.get("website", instance.website)
         instance.save()
         return instance
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ("id", "first_name", "last_name", "email")
+
+
