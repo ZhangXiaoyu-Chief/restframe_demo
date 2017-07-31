@@ -10,6 +10,7 @@ class PublisherSerializer(serializers.Serializer):
     state_province = serializers.CharField(max_length=30)
     country = serializers.CharField(max_length=50)
     website = serializers.URLField()
+    full_address = serializers.CharField(source="get_full_address", read_only=True)
 
     def create(self, validated_data):
         validated_data.pop("id")
@@ -26,9 +27,23 @@ class PublisherSerializer(serializers.Serializer):
         return instance
 
 
+class HelloField(serializers.Field):
+
+    def to_representation(self, obj):
+        # 重写to_representation方法实现序列化
+        return "%s %s" % ("hello", obj)
+
+
 class AuthorSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    hello = HelloField(read_only=True, source="first_name")
+
     class Meta:
         model = Author
-        fields = ("id", "first_name", "last_name", "email")
+        fields = ("id", "first_name", "last_name", "email", "name", "hello")
+
+    def get_name(self, obj):
+        # name字段的实现方法，它接收一个参数obj，即要序列化的对象
+        return "%s %s" % (obj.first_name, obj.last_name)
 
 

@@ -14,6 +14,9 @@ class Publisher(models.Model):
     def __str__(self):
         return self.name
 
+    def get_full_address(self):
+        return "%s %s %s %s" % (self.address, self.city, self.state_province, self.country)
+
 
 class Author(models.Model):
     first_name = models.CharField(max_length=30)
