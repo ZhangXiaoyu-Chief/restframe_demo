@@ -47,3 +47,20 @@ class AuthorSerializer(serializers.ModelSerializer):
         return "%s %s" % (obj.first_name, obj.last_name)
 
 
+class AuthorListField(serializers.RelatedField):
+    """自定义作者关联字段"""
+    def to_representation(self, obj):
+        return AuthorSerializer(obj).data
+
+
+class BookSerializer(serializers.ModelSerializer):
+
+    publisher = serializers.StringRelatedField()
+    publisher_url = serializers.HyperlinkedRelatedField(read_only=True, source="publisher", view_name="publisher_detail")
+    publisher_name = serializers.SlugRelatedField(read_only=True, slug_field="name", source="publisher")
+    author_list = AuthorListField(source="authors", many=True, read_only=True)
+
+    class Meta:
+        model = Book
+        fields = ("id", "title", "authors", "publisher", "publication_date", "publisher_url", "publisher_name", "author_list")
+

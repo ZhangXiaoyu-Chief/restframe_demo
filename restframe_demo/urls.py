@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from demo.views import publisher_detail, book_detail
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^publishers/(?P<pk>[0-9]+)/$', publisher_detail, name="publisher_detail"),
+    url(r'^books/(?P<pk>[0-9]+)/$', book_detail, name="book_detail"),
 ]
